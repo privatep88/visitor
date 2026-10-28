@@ -2,6 +2,68 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function () {
+        var isResizeObserverMsg = function (val) {
+          if (!val) return false;
+          var msg = typeof val === 'string' ? val : (val.message || String(val));
+          return (
+            msg.indexOf('ResizeObserver loop completed with undelivered notifications') !== -1 ||
+            msg.indexOf('ResizeObserver loop limit exceeded') !== -1 ||
+            msg.indexOf('ResizeObserver') !== -1
+          );
+        };
+
+        var suppressResizeObserverEvent = function (event) {
+          var msg = event && (event.message || (event.error && event.error.message) || event.reason);
+          if (isResizeObserverMsg(msg)) {
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+            if (event.stopPropagation) event.stopPropagation();
+            if (event.preventDefault) event.preventDefault();
+            return true;
+          }
+          return false;
+        };
+
+        window.addEventListener('error', suppressResizeObserverEvent, true);
+        window.addEventListener('error', suppressResizeObserverEvent, false);
+        window.addEventListener('unhandledrejection', suppressResizeObserverEvent, true);
+
+        var prevOnError = window.onerror;
+        window.onerror = function (message, source, lineno, colno, error) {
+          if (isResizeObserverMsg(message) || isResizeObserverMsg(error)) {
+            return true;
+          }
+          if (typeof prevOnError === 'function') {
+            return prevOnError.apply(this, arguments);
+          }
+          return false;
+        };
+
+        if (typeof window.ResizeObserver === 'function') {
+          var OriginalResizeObserver = window.ResizeObserver;
+          window.ResizeObserver = function (callback) {
+            var rafId = null;
+            return new OriginalResizeObserver(function (entries, observer) {
+              if (rafId !== null) {
+                window.cancelAnimationFrame(rafId);
+              }
+              rafId = window.requestAnimationFrame(function () {
+                rafId = null;
+                try {
+                  callback(entries, observer);
+                } catch (err) {
+                  if (!isResizeObserverMsg(err)) {
+                    throw err;
+                  }
+                }
+              });
+            });
+          };
+          window.ResizeObserver.prototype = OriginalResizeObserver.prototype;
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
     <meta name="description" content="نظام متكامل لتسجيل وإدارة الزوار والموردين والموظفين - شركة ساهر للخدمات الذكية" />
     <meta property="og:title" content="نظام تسجيل الزوار والموردين | SAHER" />
@@ -11,8 +73,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" crossorigin src="./assets/index-Dn_mHT_w.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-COYGrlQ9.css">
+    <script type="module" crossorigin src="./assets/index-D81eP-7C.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Cyo0-FU2.css">
   </head>
   <body class="overflow-x-hidden antialiased">
     <div id="root"></div>
