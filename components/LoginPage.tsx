@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-  User,
-  Lock,
   Eye,
   EyeOff,
-  ShieldCheck,
-  Clock,
-  Users,
-  Settings,
   AlertCircle,
-  CheckCircle2,
   Loader2,
   KeyRound,
   ArrowLeft,
   ArrowRight,
   X,
+  Info,
 } from 'lucide-react';
 import {
   SupportedLang,
@@ -31,11 +25,13 @@ interface LoginPageProps {
 /**
  * Decorative Golden Emblem (3 Visitors/Users + Smart ID Card Badge)
  * Matches the top-left institutional emblem from the reference design.
- * Contains zero embedded text.
+ * Pure SVG vector — contains zero embedded text.
  */
-const GoldenVisitorsEmblem: React.FC<{ className?: string }> = ({ className = 'w-16 h-16' }) => (
+const GoldenVisitorsEmblem: React.FC<{ className?: string }> = ({
+  className = 'w-20 h-20',
+}) => (
   <svg
-    viewBox="0 0 96 96"
+    viewBox="0 0 104 104"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
@@ -43,66 +39,64 @@ const GoldenVisitorsEmblem: React.FC<{ className?: string }> = ({ className = 'w
   >
     <defs>
       <linearGradient id="goldEmblemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#F5DDA0" />
-        <stop offset="50%" stopColor="#DFBE77" />
-        <stop offset="100%" stopColor="#B68938" />
+        <stop offset="0%" stopColor="#F7E2AA" />
+        <stop offset="45%" stopColor="#DFBE77" />
+        <stop offset="100%" stopColor="#B48532" />
       </linearGradient>
     </defs>
     {/* Center Person Head */}
-    <circle cx="48" cy="22" r="10.5" fill="url(#goldEmblemGrad)" />
+    <circle cx="52" cy="23" r="11.5" fill="url(#goldEmblemGrad)" />
     {/* Left Person Head */}
-    <circle cx="23" cy="31" r="8" fill="url(#goldEmblemGrad)" />
+    <circle cx="24" cy="34" r="9" fill="url(#goldEmblemGrad)" />
     {/* Right Person Head */}
-    <circle cx="73" cy="31" r="8" fill="url(#goldEmblemGrad)" />
+    <circle cx="80" cy="34" r="9" fill="url(#goldEmblemGrad)" />
     {/* Left Person Shoulders */}
     <path
-      d="M8 61C8 51.5 14.5 45 23 45C26.8 45 30.2 46.2 32.8 48.3C29.8 52.2 28 57 28 62.5V67H11C9.3 67 8 65.7 8 64V61Z"
+      d="M7 66C7 55.5 14.2 48.5 24 48.5C28.2 48.5 31.8 49.8 34.6 52.1C31.4 56.3 29.5 61.5 29.5 67.5V72H10.5C8.6 72 7 70.4 7 68.5V66Z"
       fill="url(#goldEmblemGrad)"
     />
     {/* Right Person Shoulders */}
     <path
-      d="M88 61C88 51.5 81.5 45 73 45C69.2 45 65.8 46.2 63.2 48.3C66.2 52.2 68 57 68 62.5V67H85C86.7 67 88 65.7 88 64V61Z"
+      d="M97 66C97 55.5 89.8 48.5 80 48.5C75.8 48.5 72.2 49.8 69.4 52.1C72.6 56.3 74.5 61.5 74.5 67.5V72H93.5C95.4 72 97 70.4 97 68.5V66Z"
       fill="url(#goldEmblemGrad)"
     />
-    {/* Center Person Arch around Badge */}
+    {/* Center Person Shoulders Arch */}
     <path
-      d="M27 56C27 44.5 36.2 36.5 48 36.5C59.8 36.5 69 44.5 69 56V59H64V54C64 49.6 60.4 46 56 46H40C35.6 46 32 49.6 32 54V59H27V56Z"
+      d="M28.5 60C28.5 47.5 38.8 39 52 39C65.2 39 75.5 47.5 75.5 60V64H70V58C70 53 66 49 61 49H43C38 49 34 53 34 58V64H28.5V60Z"
       fill="url(#goldEmblemGrad)"
     />
     {/* Smart Visitor ID Card Badge */}
     <rect
-      x="34"
-      y="50"
-      width="28"
-      height="34"
-      rx="5"
+      x="36"
+      y="53"
+      width="32"
+      height="38"
+      rx="6"
       fill="url(#goldEmblemGrad)"
     />
     {/* Badge Top Clip */}
-    <path
-      d="M44 46H52V51H44V46Z"
-       rx="2"
-      fill="#F5DDA0"
-    />
+    <rect x="47" y="48" width="10" height="6" rx="2" fill="#F7E2AA" />
     {/* Badge Avatar Silhouette Cutout */}
-    <circle cx="44" cy="64" r="4" fill="#072252" />
+    <circle cx="47.5" cy="69" r="4.5" fill="#06214F" />
     <path
-      d="M38 76C38 72.5 40.7 70 44 70C47.3 70 50 72.5 50 76V77H38V76Z"
-      fill="#072252"
+      d="M40.5 82.5C40.5 78.6 43.6 75.8 47.5 75.8C51.4 75.8 54.5 78.6 54.5 82.5V84H40.5V82.5Z"
+      fill="#06214F"
     />
     {/* Badge Info Lines Cutout */}
-    <rect x="52" y="63" width="6" height="2.5" rx="1.2" fill="#072252" />
-    <rect x="52" y="68" width="6" height="2.5" rx="1.2" fill="#072252" />
+    <rect x="56.5" y="68" width="7" height="3" rx="1.5" fill="#06214F" />
+    <rect x="56.5" y="74" width="7" height="3" rx="1.5" fill="#06214F" />
   </svg>
 );
 
 /**
  * Corporate Towers Emblem at top of the Login Card
- * Matches the blue & gold architectural towers + orbital ring in the reference card.
+ * Matches the blue & gold architectural towers + orbital swoosh ring in the reference card.
  */
-const SystemTowersLogo: React.FC<{ className?: string }> = ({ className = 'w-16 h-16' }) => (
+const SystemTowersLogo: React.FC<{ className?: string }> = ({
+  className = 'w-20 h-20',
+}) => (
   <svg
-    viewBox="0 0 100 96"
+    viewBox="0 0 108 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
@@ -110,40 +104,190 @@ const SystemTowersLogo: React.FC<{ className?: string }> = ({ className = 'w-16 
   >
     <defs>
       <linearGradient id="towerBlueMain" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#1E6FD9" />
-        <stop offset="55%" stopColor="#004799" />
-        <stop offset="100%" stopColor="#002960" />
+        <stop offset="0%" stopColor="#267CE8" />
+        <stop offset="55%" stopColor="#00499E" />
+        <stop offset="100%" stopColor="#002659" />
       </linearGradient>
       <linearGradient id="towerBlueDark" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#0D47A1" />
-        <stop offset="100%" stopColor="#062356" />
+        <stop offset="0%" stopColor="#1251AD" />
+        <stop offset="100%" stopColor="#062252" />
       </linearGradient>
       <linearGradient id="towerGold" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#F4DC9B" />
-        <stop offset="50%" stopColor="#D9AF5B" />
-        <stop offset="100%" stopColor="#AE802B" />
+        <stop offset="0%" stopColor="#F6DF9E" />
+        <stop offset="50%" stopColor="#DAB05C" />
+        <stop offset="100%" stopColor="#AD7E29" />
       </linearGradient>
     </defs>
 
     {/* Left Golden Tower */}
-    <path d="M26 39L39 29V72H26V39Z" fill="url(#towerGold)" />
-    <path d="M22 42L26 39V72H22V42Z" fill="#B58732" />
+    <path d="M29 41L43 30V75H29V41Z" fill="url(#towerGold)" />
+    <path d="M24 44L29 41V75H24V44Z" fill="#B58631" />
 
     {/* Center Tall Royal Blue Tower */}
-    <path d="M43 20L57 10V73H43V20Z" fill="url(#towerBlueMain)" />
-    <path d="M57 10L61 13V73H57V10Z" fill="#052150" />
+    <path d="M47 20L62 9V76H47V20Z" fill="url(#towerBlueMain)" />
+    <path d="M62 9L66 12.5V76H62V9Z" fill="#051F4B" />
 
     {/* Right Blue Tower */}
-    <path d="M64 29L76 38V71H64V29Z" fill="url(#towerBlueDark)" />
+    <path d="M69 30L82 40V74H69V30Z" fill="url(#towerBlueDark)" />
 
     {/* Orbital Swoosh Ring */}
     <path
-      d="M17 69C19 78 39 83 61 78C78 74 89 64 84 56C82 53 78 51 74 50C79 53 80 58 74 63C65 71 44 75 28 72C21 70.5 17.5 67.5 19 64L17 69Z"
+      d="M18 71C20 81 42 87 66 81C84 76.5 96 66 90 57.5C88 54 83.5 52 79 51C84.5 54.5 85.5 60 79 65C69.5 73.5 47 77.5 30 74.5C22.5 73 18.5 69.5 20.5 66L18 71Z"
       fill="url(#towerBlueMain)"
     />
     <path
-      d="M21 74C32 82 58 83 77 73C60 80 35 79 21 74Z"
+      d="M22 76.5C34 85 62 86 83 75.5C65 83 38 82 22 76.5Z"
       fill="url(#towerGold)"
+    />
+  </svg>
+);
+
+/**
+ * Custom Outline Input Icons matching the Reference Design
+ */
+const InputUserIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    className={className}
+  >
+    <circle cx="12" cy="8" r="4" />
+    <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7" />
+  </svg>
+);
+
+const InputLockKeyholeIcon: React.FC<{ className?: string }> = ({
+  className = 'w-5 h-5',
+}) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    className={className}
+  >
+    <rect x="4" y="11" width="16" height="10" rx="2.5" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    <circle cx="12" cy="15.5" r="1" fill="currentColor" />
+    <path d="M12 16.5v2" />
+  </svg>
+);
+
+/**
+ * Four Golden Line Feature Icons matching the bottom-left bar in the Reference Design
+ */
+const FeatureShieldIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
+  <svg
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={className}
+  >
+    <path
+      d="M18 4L6.5 9V17.5C6.5 25.2 11.4 31.8 18 34C24.6 31.8 29.5 25.2 29.5 17.5V9L18 4Z"
+      stroke="#E6C370"
+      strokeWidth="2.1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M13 18.5L16.5 22L23.5 15"
+      stroke="#E6C370"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const FeatureClockIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
+  <svg
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={className}
+  >
+    <circle
+      cx="18"
+      cy="18"
+      r="13.5"
+      stroke="#E6C370"
+      strokeWidth="2.1"
+    />
+    <path
+      d="M18 10.5V18.5L23.5 21.5"
+      stroke="#E6C370"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const FeaturePeopleIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
+  <svg
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={className}
+  >
+    <circle cx="18" cy="11.5" r="4.2" stroke="#E6C370" strokeWidth="2" />
+    <circle cx="9.5" cy="14" r="3.2" stroke="#E6C370" strokeWidth="1.9" />
+    <circle cx="26.5" cy="14" r="3.2" stroke="#E6C370" strokeWidth="1.9" />
+    <path
+      d="M10.5 28.5V26C10.5 22.1 13.9 19 18 19C22.1 19 25.5 22.1 25.5 26V28.5"
+      stroke="#E6C370"
+      strokeWidth="2.1"
+      strokeLinecap="round"
+    />
+    <path
+      d="M4 28.5V26.5C4 23.6 6.2 21.2 9.2 21"
+      stroke="#E6C370"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+    />
+    <path
+      d="M32 28.5V26.5C32 23.6 29.8 21.2 26.8 21"
+      stroke="#E6C370"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const FeatureGearIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
+  <svg
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={className}
+  >
+    <circle cx="18" cy="18" r="4.5" stroke="#E6C370" strokeWidth="2.1" />
+    <path
+      d="M18 5.5V8.5M18 27.5V30.5M5.5 18H8.5M27.5 18H30.5M9.2 9.2L11.4 11.4M24.6 24.6L26.8 26.8M26.8 9.2L24.6 11.4M11.4 24.6L9.2 26.8"
+      stroke="#E6C370"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+    <circle
+      cx="18"
+      cy="18"
+      r="9.5"
+      stroke="#E6C370"
+      strokeWidth="2"
+      strokeDasharray="4 2.5"
     />
   </svg>
 );
@@ -154,14 +298,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [invalidField, setInvalidField] = useState<'both' | 'username' | 'password' | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
 
   // Forgot password modal state
   const [isForgotOpen, setIsForgotOpen] = useState<boolean>(false);
-  const [recoveryInput, setRecoveryInput] = useState<string>('');
-  const [recoverySubmitted, setRecoverySubmitted] = useState<boolean>(false);
-  const [recoveryError, setRecoveryError] = useState<string | null>(null);
 
   const isRTL = lang === 'ar';
   const t = LOGIN_TRANSLATIONS[lang];
@@ -189,16 +331,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     if (errorMessage) {
       const revalidated = validateCredentials(username, password, newLang);
       setErrorMessage(revalidated.errorMessage || null);
+      setInvalidField(revalidated.field || null);
     }
   };
 
   const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setErrorMessage(null);
+    setInvalidField(null);
 
     const validation = validateCredentials(username, password, lang);
     if (!validation.valid) {
       setErrorMessage(validation.errorMessage || t.validation.bothRequired);
+      setInvalidField(validation.field || 'both');
       return;
     }
 
@@ -213,24 +360,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       }
       setIsSubmitting(false);
       onLoginSuccess(trimmedUser);
-    }, 500);
-  };
-
-  const handleRecoverySubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setRecoveryError(null);
-    if (!recoveryInput.trim()) {
-      setRecoveryError(t.recoveryModal.requiredError);
-      return;
-    }
-    setRecoverySubmitted(true);
+    }, 450);
   };
 
   const closeForgotModal = () => {
     setIsForgotOpen(false);
-    setRecoverySubmitted(false);
-    setRecoveryError(null);
-    setRecoveryInput('');
   };
 
   // Close modal on Escape key
@@ -248,124 +382,106 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   const featureItems = [
     {
       id: 'security',
-      icon: ShieldCheck,
+      icon: FeatureShieldIcon,
       arText: ar.features.security,
       enText: en.features.security,
     },
     {
       id: 'efficiency',
-      icon: Clock,
+      icon: FeatureClockIcon,
       arText: ar.features.efficiency,
       enText: en.features.efficiency,
     },
     {
       id: 'management',
-      icon: Users,
+      icon: FeaturePeopleIcon,
       arText: ar.features.management,
       enText: en.features.management,
     },
     {
       id: 'service',
-      icon: Settings,
+      icon: FeatureGearIcon,
       arText: ar.features.service,
       enText: en.features.service,
     },
   ];
 
+  const receptionImageSrc = `${
+    typeof import.meta !== 'undefined' &&
+    import.meta.env &&
+    typeof import.meta.env.BASE_URL === 'string'
+      ? import.meta.env.BASE_URL.endsWith('/')
+        ? import.meta.env.BASE_URL
+        : `${import.meta.env.BASE_URL}/`
+      : './'
+  }assets/reception-scene.png`;
+
+  const isUsernameInvalid = invalidField === 'both' || invalidField === 'username';
+  const isPasswordInvalid = invalidField === 'both' || invalidField === 'password';
+
   return (
     <div
       dir={t.dir}
       lang={t.langCode}
-      className="min-h-screen w-full relative overflow-x-hidden flex flex-col justify-between select-text"
+      className="min-h-screen w-full relative overflow-x-hidden flex flex-col justify-between select-text bg-[#041838]"
       style={{
         background:
-          'radial-gradient(circle at 28% 22%, #12489c 0%, #08275c 45%, #041533 100%)',
+          'radial-gradient(circle at 24% 18%, #144ca4 0%, #082961 46%, #03122c 100%)',
       }}
     >
-      {/* Decorative Background Technical Curves & Golden Ribbons (Pure SVG, No Text) */}
+      {/* =====================================================================
+          1. BACKGROUND VISUAL LAYERS:
+             - Independent Reception Scene Photo on Left-Center Canvas
+             - Seamless Institutional Blue Gradient Masks
+             - Top-Right & Bottom Blue/Gold Geometric Curves (SVG)
+         ===================================================================== */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 overflow-hidden z-0"
+        className="pointer-events-none absolute inset-0 overflow-hidden z-0"
       >
-        {/* Top-Right Sweeping Royal Blue & Cyan Arc */}
+        {/* Top-Right Sweeping Royal Blue & Cyan Geometric Arc */}
         <svg
-          viewBox="0 0 1600 900"
+          viewBox="0 0 1600 960"
           preserveAspectRatio="none"
           className="absolute inset-0 w-full h-full"
         >
           <defs>
-            <linearGradient id="topRightArc" x1="65%" y1="0%" x2="100%" y2="55%">
-              <stop offset="0%" stopColor="#1b64c8" stopOpacity="0.38" />
-              <stop offset="50%" stopColor="#09306e" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#03122b" stopOpacity="0.92" />
-            </linearGradient>
-            <linearGradient id="goldWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c5973e" />
-              <stop offset="30%" stopColor="#f5dca2" />
-              <stop offset="65%" stopColor="#d8ad56" />
-              <stop offset="100%" stopColor="#b0822c" />
-            </linearGradient>
-            <linearGradient id="bottomRoyalWave" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#062356" />
-              <stop offset="50%" stopColor="#0d47a1" />
-              <stop offset="100%" stopColor="#041533" />
+            <linearGradient id="topRightArcGrad" x1="60%" y1="0%" x2="100%" y2="55%">
+              <stop offset="0%" stopColor="#1e6bd6" stopOpacity="0.42" />
+              <stop offset="50%" stopColor="#082e6b" stopOpacity="0.72" />
+              <stop offset="100%" stopColor="#031129" stopOpacity="0.95" />
             </linearGradient>
           </defs>
-
-          {/* Upper right diagonal institutional arc */}
           <path
-            d="M1080,0 C1230,110 1380,140 1600,40 L1600,900 L920,900 C1060,640 1190,340 1080,0 Z"
-            fill="url(#topRightArc)"
+            d="M1120,0 C1260,115 1410,145 1600,45 L1600,960 L960,960 C1100,660 1220,350 1120,0 Z"
+            fill="url(#topRightArcGrad)"
           />
           <path
-            d="M1390,0 C1310,95 1210,165 1110,210"
+            d="M1415,0 C1325,110 1215,190 1090,245"
             fill="none"
-            stroke="#38bdf8"
-            strokeOpacity="0.28"
-            strokeWidth="2"
-          />
-
-          {/* Bottom Sweeping Layered Blue & Gold Waves */}
-          <path
-            d="M0,745 C260,885 680,865 1160,760 C1350,718 1490,665 1600,610 L1600,900 L0,900 Z"
-            fill="url(#bottomRoyalWave)"
-          />
-          {/* Left Gold Ribbon Accent */}
-          <path
-            d="M0,735 C95,805 225,848 390,865 C220,860 95,825 0,768 Z"
-            fill="url(#goldWaveGrad)"
-            opacity="0.92"
-          />
-          {/* Sweeping Center-Right Gold & Cyan Wave Accent */}
-          <path
-            d="M220,885 C650,865 1120,785 1600,600 L1600,622 C1120,800 660,875 220,885 Z"
-            fill="url(#goldWaveGrad)"
-            opacity="0.88"
-          />
-          <path
-            d="M0,825 C460,910 980,855 1600,685 L1600,900 L0,900 Z"
-            fill="#04132d"
-            opacity="0.85"
+            stroke="#56bdf8"
+            strokeOpacity="0.32"
+            strokeWidth="2.2"
           />
         </svg>
       </div>
 
-      {/* Top Language Toggle Bar (AR | EN Pill Switcher in Top Right) */}
-      <header className="relative z-30 w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-4 sm:pt-6 flex items-center justify-end">
+      {/* Top Navigation Bar with AR | EN Switcher in the Top-Right Corner */}
+      <header className="relative z-30 w-full max-w-[1520px] mx-auto px-4 sm:px-8 lg:px-12 pt-4 sm:pt-6 flex items-center justify-end">
         <div
           role="group"
           aria-label={t.langToggleLabel}
           dir="ltr"
-          className="inline-flex items-center rounded-full p-0.5 border border-[var(--login-gold)] bg-[#061b40]/80 backdrop-blur-md shadow-lg"
+          className="inline-flex items-center rounded-full p-[3px] border border-[#dfbe77]/90 bg-[#051a3d]/85 backdrop-blur-md shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
         >
           <button
             type="button"
             onClick={() => handleLanguageChange('ar')}
             aria-pressed={lang === 'ar'}
-            className={`min-w-[48px] min-h-[34px] px-3.5 py-1 rounded-full text-xs sm:text-sm font-bold font-english transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+            className={`min-w-[46px] min-h-[32px] px-3.5 py-1 rounded-full text-xs sm:text-sm font-extrabold font-english tracking-wide transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
               lang === 'ar'
-                ? 'bg-gradient-to-b from-[#f3d999] to-[#d6ae5f] text-[#061c42] shadow-sm'
-                : 'text-slate-200 hover:text-white'
+                ? 'bg-gradient-to-b from-[#f6dfa2] via-[#e2be70] to-[#c79942] text-[#061c42] shadow-sm'
+                : 'text-white/90 hover:text-white'
             }`}
           >
             AR
@@ -374,10 +490,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             type="button"
             onClick={() => handleLanguageChange('en')}
             aria-pressed={lang === 'en'}
-            className={`min-w-[48px] min-h-[34px] px-3.5 py-1 rounded-full text-xs sm:text-sm font-bold font-english transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+            className={`min-w-[46px] min-h-[32px] px-3.5 py-1 rounded-full text-xs sm:text-sm font-extrabold font-english tracking-wide transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
               lang === 'en'
-                ? 'bg-gradient-to-b from-[#f3d999] to-[#d6ae5f] text-[#061c42] shadow-sm'
-                : 'text-slate-200 hover:text-white'
+                ? 'bg-gradient-to-b from-[#f6dfa2] via-[#e2be70] to-[#c79942] text-[#061c42] shadow-sm'
+                : 'text-white/90 hover:text-white'
             }`}
           >
             EN
@@ -385,60 +501,68 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         </div>
       </header>
 
-      {/* Main Content Container: Left Institutional Showcase + Right Light Login Card on Desktop */}
-      <main className="relative z-20 flex-1 flex items-center w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-4 sm:py-6 lg:py-8">
-        {/* Note: On desktop (lg), keep left showcase on left and login card on right via lg:dir-ltr grid placement while preserving inner RTL/LTR direction */}
+      {/* =====================================================================
+          2. MAIN TWO-COLUMN COMPOSITION:
+             - Left Showcase (Hero Titles + Seamless Reception Photo + 4 Feature Pillars)
+             - Right Sign-In Card
+         ===================================================================== */}
+      <main className="relative z-20 flex-1 flex items-center w-full max-w-[1520px] mx-auto px-4 sm:px-8 lg:px-12 pb-10 sm:pb-14 pt-2">
+        {/* Keep Left Showcase on Left and Login Card on Right on Desktop (lg), while respecting inner RTL/LTR text alignment */}
         <div
           dir="ltr"
-          className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center"
+          className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-10 items-center"
         >
-          {/* LEFT COLUMN (Desktop): Hero Identity + Reception Lobby Scene + 4 Feature Pillars */}
+          {/* LEFT SECTION (7 Columns on Desktop): Hero Header + Reception Visual + 4 Feature Pillars */}
           <section
             dir={t.dir}
-            aria-label={isRTL ? 'القسم التعريفي والمزايا' : 'System Introduction and Features'}
-            className="lg:col-span-7 flex flex-col justify-between space-y-5 sm:space-y-6 order-2 lg:order-1"
+            aria-label={
+              isRTL
+                ? 'القسم التعريفي لنظام تسجيل الزوار والموردين'
+                : 'Visitors & Suppliers Registration System Introduction'
+            }
+            className="lg:col-span-7 flex flex-col justify-between order-2 lg:order-1 relative"
           >
-            {/* 1. Hero Header Block with Golden Emblem & Vertical Gold Divider */}
+            {/* A. Top-Left Identity Block: Golden Emblem + Vertical Gold Divider + Selectable Bilingual Titles */}
             <div
               dir="ltr"
-              className="flex items-center gap-4 sm:gap-6 px-1 sm:px-2"
+              className="relative z-20 flex items-center gap-4 sm:gap-6 px-1 sm:px-2 mb-2 sm:mb-3"
             >
-              {/* Golden Visitors + Badge Icon */}
+              {/* Golden Visitors & ID Badge Emblem */}
               <div className="shrink-0">
-                <GoldenVisitorsEmblem className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 drop-shadow-[0_6px_16px_rgba(0,0,0,0.4)]" />
+                <GoldenVisitorsEmblem className="w-16 h-16 sm:w-20 sm:h-20 xl:w-24 xl:h-24 drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]" />
               </div>
 
-              {/* Vertical Golden Line */}
+              {/* Vertical Golden Line Separating Icon from Text */}
               <div
                 aria-hidden="true"
-                className="w-[2.5px] self-stretch min-h-[84px] sm:min-h-[108px] rounded-full bg-gradient-to-b from-[#f3d999] via-[#dfbe77] to-[#b68938] shrink-0"
+                className="w-[2.5px] self-stretch min-h-[88px] sm:min-h-[112px] rounded-full bg-gradient-to-b from-[#f6dfa4] via-[#dfbe77] to-[#b48532] shrink-0 shadow-[0_0_10px_rgba(223,190,119,0.35)]"
               />
 
-              {/* Selectable Real HTML Titles & Descriptions */}
+              {/* Real Selectable HTML Headings & Descriptions */}
               <div
                 dir={t.dir}
-                className={`flex-1 min-w-0 space-y-2 ${
-                  isRTL ? 'text-right' : 'text-left'
+                className={`flex-1 min-w-0 space-y-1.5 ${
+                  isRTL ? 'text-right lg:text-left' : 'text-left'
                 }`}
               >
                 {isRTL ? (
                   <>
-                    <h1 className="text-2xl sm:text-3xl xl:text-[40px] font-extrabold text-white leading-tight tracking-tight font-arabic drop-shadow-sm">
+                    <h1 className="text-2xl sm:text-3xl xl:text-[42px] font-extrabold text-white leading-tight tracking-tight font-arabic drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
                       {ar.heroTitle}
                     </h1>
                     <h2
                       dir="ltr"
-                      className="text-base sm:text-xl xl:text-[23px] font-bold text-white/95 leading-snug font-english"
+                      className="text-base sm:text-xl xl:text-[24px] font-bold text-white leading-snug font-english drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"
                     >
                       {en.heroTitle}
                     </h2>
-                    <div className="pt-1 space-y-1">
-                      <p className="text-sm sm:text-lg xl:text-xl font-medium text-slate-100 leading-relaxed font-arabic">
+                    <div className="pt-1.5 space-y-1">
+                      <p className="text-sm sm:text-lg xl:text-[21px] font-medium text-white/95 leading-relaxed font-arabic drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
                         {ar.heroDescription}
                       </p>
                       <p
                         dir="ltr"
-                        className="text-xs sm:text-sm xl:text-[15px] font-normal text-slate-200/95 leading-relaxed font-english"
+                        className="text-xs sm:text-sm xl:text-[15.5px] font-normal text-slate-100/95 leading-relaxed font-english drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
                       >
                         {en.heroDescription}
                       </p>
@@ -446,22 +570,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   </>
                 ) : (
                   <>
-                    <h1 className="text-xl sm:text-2xl xl:text-[30px] font-extrabold text-white leading-tight tracking-tight font-english drop-shadow-sm">
+                    <h1 className="text-xl sm:text-2xl xl:text-[31px] font-extrabold text-white leading-tight tracking-tight font-english drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
                       {en.heroTitle}
                     </h1>
                     <h2
                       dir="rtl"
-                      className="text-xl sm:text-2xl xl:text-[32px] font-bold text-white/95 leading-snug font-arabic"
+                      className="text-xl sm:text-2xl xl:text-[34px] font-bold text-white leading-snug font-arabic drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"
                     >
                       {ar.heroTitle}
                     </h2>
-                    <div className="pt-1 space-y-1">
-                      <p className="text-xs sm:text-base xl:text-[17px] font-medium text-slate-100 leading-relaxed font-english">
+                    <div className="pt-1.5 space-y-1">
+                      <p className="text-xs sm:text-base xl:text-[17px] font-medium text-white/95 leading-relaxed font-english drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
                         {en.heroDescription}
                       </p>
                       <p
                         dir="rtl"
-                        className="text-sm sm:text-base xl:text-lg font-normal text-slate-200/95 leading-relaxed font-arabic"
+                        className="text-sm sm:text-base xl:text-[19px] font-normal text-slate-100/95 leading-relaxed font-arabic drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
                       >
                         {ar.heroDescription}
                       </p>
@@ -471,20 +595,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               </div>
             </div>
 
-            {/* 2. Photorealistic UAE Corporate Reception Scene */}
-            <div className="relative w-full rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(2,10,28,0.55)] border border-white/15 bg-[#082250]">
-              <div className="relative w-full h-52 sm:h-72 md:h-80 lg:h-[360px] xl:h-[390px]">
+            {/* B. Photorealistic Corporate Reception Scene (Seamless Visual Blend + Bottom Feature Bar) */}
+            <div className="relative w-full mt-1">
+              {/* Reception Scene Image Container */}
+              <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-[380px] xl:h-[425px] rounded-2xl lg:rounded-3xl overflow-hidden">
                 {!imageError ? (
                   <img
-                    src={`${
-                      typeof import.meta !== 'undefined' &&
-                      import.meta.env &&
-                      typeof import.meta.env.BASE_URL === 'string'
-                        ? import.meta.env.BASE_URL.endsWith('/')
-                          ? import.meta.env.BASE_URL
-                          : `${import.meta.env.BASE_URL}/`
-                        : './'
-                    }assets/reception-scene.png`}
+                    src={receptionImageSrc}
                     alt={t.heroImageAlt}
                     width={905}
                     height={502}
@@ -497,50 +614,57 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   </div>
                 )}
 
-                {/* Subtle Edge Blending Overlays into Institutional Royal Blue */}
+                {/* Soft Top, Right, Left & Bottom Gradient Feathering to blend into Royal Blue Canvas */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061d47] via-transparent to-[#072353]/40"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#092b66]/85 via-[#092b66]/30 to-transparent"
                 />
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#061d47]/25 via-transparent to-[#072353]/45"
+                  className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-28 bg-gradient-to-l from-[#06204d]/85 via-[#06204d]/30 to-transparent"
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[#06204d]/50 to-transparent"
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-28 sm:h-36 bg-gradient-to-t from-[#041738] via-[#061f4c]/85 to-transparent"
                 />
               </div>
 
-              {/* 3. Four Feature Pillars Row Integrated at Bottom of Showcase */}
+              {/* C. Four Feature Pillars Row at Bottom of Left Section (Matching Reference Layout) */}
               <div
-                dir={t.dir}
-                className="relative z-10 bg-gradient-to-t from-[#041533]/95 via-[#07214e]/90 to-[#082659]/80 backdrop-blur-md border-t border-white/15 px-3 sm:px-6 py-4"
+                dir="ltr"
+                className="relative z-20 -mt-12 sm:-mt-16 px-2 sm:px-6 pt-2 pb-1"
               >
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-1 items-start">
                   {featureItems.map((item, index) => {
                     const IconComponent = item.icon;
                     return (
                       <div
                         key={item.id}
-                        className={`flex flex-col items-center text-center px-2 ${
+                        className={`flex flex-col items-center text-center px-2 sm:px-3 ${
                           index < featureItems.length - 1
-                            ? isRTL
-                              ? 'sm:border-l sm:border-white/20'
-                              : 'sm:border-r sm:border-white/20'
+                            ? 'sm:border-r sm:border-white/25'
                             : ''
                         }`}
                       >
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-[var(--login-gold)]/40 flex items-center justify-center mb-2 shadow-inner">
-                          <IconComponent
-                            className="w-5 h-5 text-[var(--login-gold)]"
-                            strokeWidth={1.8}
-                          />
+                        <div className="mb-2 flex items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]">
+                          <IconComponent className="w-7 h-7 sm:w-8 sm:h-8" />
                         </div>
+
                         {isRTL ? (
                           <>
-                            <span className="text-xs sm:text-sm font-bold text-white leading-snug font-arabic">
+                            <span
+                              dir="rtl"
+                              className="text-xs sm:text-[15px] font-bold text-white leading-snug font-arabic drop-shadow-sm"
+                            >
                               {item.arText}
                             </span>
                             <span
                               dir="ltr"
-                              className="text-[11px] sm:text-xs font-medium text-slate-200/90 leading-snug font-english mt-0.5"
+                              className="text-[11px] sm:text-xs font-medium text-white/90 leading-snug font-english mt-0.5"
                             >
                               {item.enText}
                             </span>
@@ -549,13 +673,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                           <>
                             <span
                               dir="ltr"
-                              className="text-xs sm:text-sm font-bold text-white leading-snug font-english"
+                              className="text-xs sm:text-[14px] font-bold text-white leading-snug font-english drop-shadow-sm"
                             >
                               {item.enText}
                             </span>
                             <span
                               dir="rtl"
-                              className="text-[11px] sm:text-xs font-medium text-slate-200/90 leading-snug font-arabic mt-0.5"
+                              className="text-[11px] sm:text-xs font-medium text-white/90 leading-snug font-arabic mt-0.5"
                             >
                               {item.arText}
                             </span>
@@ -569,54 +693,55 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             </div>
           </section>
 
-          {/* RIGHT COLUMN (Desktop): Light Institutional Login Card */}
+          {/* RIGHT SECTION (5 Columns on Desktop): Light Institutional Login Card */}
           <section
             dir={t.dir}
-            aria-label={isRTL ? 'بطاقة تسجيل الدخول' : 'Sign In Card'}
-            className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2"
+            aria-label={isRTL ? 'لوحة تسجيل الدخول' : 'Sign In Panel'}
+            className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 relative z-30"
           >
-            <div className="w-full max-w-[460px] rounded-[28px] bg-[var(--login-card-bg)] border border-[var(--login-card-border)] shadow-[0_25px_65px_rgba(2,10,28,0.6)] px-6 sm:px-10 py-8 sm:py-10 text-[var(--login-text-heading)] flex flex-col justify-between backdrop-blur-xl">
+            <div className="w-full max-w-[465px] rounded-[28px] bg-gradient-to-b from-[#f8fbff] via-[#f2f7fd] to-[#ebf3fc] border border-white/95 shadow-[0_28px_70px_rgba(2,10,28,0.65)] px-6 sm:px-10 py-8 sm:py-10 text-[#0a2e65] flex flex-col justify-between">
               {/* Top Section: Architectural Logo + Sign In Headings */}
               <div>
-                <div className="flex flex-col items-center text-center mb-7">
-                  <SystemTowersLogo className="w-20 h-20 sm:w-22 sm:h-22 mb-3 drop-shadow-sm" />
+                <div className="flex flex-col items-center text-center mb-6 sm:mb-7">
+                  <SystemTowersLogo className="w-20 h-20 sm:w-24 sm:h-22 mb-2.5 drop-shadow-sm" />
 
                   {isRTL ? (
                     <>
-                      <h2 className="text-2xl sm:text-[30px] font-extrabold text-[#0a316d] leading-tight font-arabic">
+                      <h2 className="text-2xl sm:text-[32px] font-extrabold text-[#0b3574] leading-tight font-arabic">
                         {ar.cardTitle}
                       </h2>
                       <p
                         dir="ltr"
-                        className="text-lg sm:text-xl font-bold text-[#0f3d82] mt-0.5 font-english"
+                        className="text-lg sm:text-[22px] font-bold text-[#0e3f88] mt-0.5 font-english"
                       >
                         {en.cardTitle}
                       </p>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-2xl sm:text-[28px] font-extrabold text-[#0a316d] leading-tight font-english">
+                      <h2 className="text-2xl sm:text-[30px] font-extrabold text-[#0b3574] leading-tight font-english">
                         {en.cardTitle}
                       </h2>
                       <p
                         dir="rtl"
-                        className="text-xl sm:text-2xl font-bold text-[#0f3d82] mt-0.5 font-arabic"
+                        className="text-xl sm:text-[26px] font-bold text-[#0e3f88] mt-0.5 font-arabic"
                       >
                         {ar.cardTitle}
                       </p>
                     </>
                   )}
 
-                  {/* Subtle Golden Accent Bar below Sign In */}
+                  {/* Golden Divider Line Below Sign In */}
                   <div
                     aria-hidden="true"
-                    className="w-16 h-[3px] rounded-full bg-gradient-to-r from-[#d4a953] via-[#ebd08e] to-[#d4a953] mt-3.5"
+                    className="w-14 h-[3px] rounded-full bg-gradient-to-r from-[#d4a84f] via-[#ebd08e] to-[#d4a84f] mt-3.5"
                   />
                 </div>
 
-                {/* Validation / Error Message Box */}
+                {/* Validation / Error Message Alert */}
                 {errorMessage && (
                   <div
+                    id="login-error-message"
                     role="alert"
                     aria-live="assertive"
                     className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-300 text-red-800 text-xs sm:text-sm flex items-start gap-2.5 animate-fadeIn"
@@ -632,19 +757,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   <div>
                     <label
                       htmlFor="login-username"
-                      className="flex items-center justify-between text-xs sm:text-sm font-bold text-[#1e3f73] mb-1.5 px-1 cursor-pointer"
+                      className="flex items-center justify-between text-xs sm:text-[13px] font-bold text-[#163d77] mb-1.5 px-1 cursor-pointer"
                     >
                       {isRTL ? (
                         <>
                           <span className="font-arabic">{ar.usernameLabel}</span>
-                          <span dir="ltr" className="font-english text-xs text-[#4b658c]">
+                          <span dir="ltr" className="font-english text-xs text-[#4b6790]">
                             {en.usernameLabel}
                           </span>
                         </>
                       ) : (
                         <>
                           <span className="font-english">{en.usernameLabel}</span>
-                          <span dir="rtl" className="font-arabic text-xs text-[#4b658c]">
+                          <span dir="rtl" className="font-arabic text-xs text-[#4b6790]">
                             {ar.usernameLabel}
                           </span>
                         </>
@@ -652,13 +777,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     </label>
 
                     <div className="relative flex items-center">
+                      {/* Icon positioned on the left (matching reference) in LTR or right in RTL */}
                       <span
                         aria-hidden="true"
-                        className={`pointer-events-none absolute inset-y-0 flex items-center text-[#0b3978] ${
+                        className={`pointer-events-none absolute inset-y-0 flex items-center text-[#0c3c82] ${
                           isRTL ? 'right-0 pr-4' : 'left-0 pl-4'
                         }`}
                       >
-                        <User className="w-5 h-5" strokeWidth={2} />
+                        <InputUserIcon className="w-5 h-5" />
                       </span>
 
                       <input
@@ -667,13 +793,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                         type="text"
                         required
                         autoComplete="username"
+                        aria-invalid={isUsernameInvalid}
+                        aria-describedby={errorMessage ? 'login-error-message' : undefined}
                         value={username}
                         onChange={(e) => {
                           setUsername(e.target.value);
-                          if (errorMessage) setErrorMessage(null);
+                          if (errorMessage) {
+                            setErrorMessage(null);
+                            setInvalidField(null);
+                          }
                         }}
-                        placeholder={`${ar.usernamePlaceholder} | ${en.usernamePlaceholder}`}
-                        className={`w-full min-h-[52px] py-3 rounded-xl bg-[var(--login-input-bg)] border border-[var(--login-input-border)] text-[#0a2958] placeholder-[#5b7396] text-sm sm:text-base font-medium shadow-inner transition-all duration-200 focus:outline-none focus:border-[var(--login-input-border-focus)] focus:ring-3 focus:ring-[#004799]/15 ${
+                        placeholder={t.usernamePlaceholder}
+                        className={`w-full min-h-[54px] py-3 rounded-xl bg-white border ${
+                          isUsernameInvalid
+                            ? 'border-red-400 focus:border-red-600 focus:ring-red-500/15'
+                            : 'border-[#c9d9ee] focus:border-[#004799] focus:ring-[#004799]/15'
+                        } text-[#0a2958] placeholder-[#567096] text-sm sm:text-base font-medium shadow-[inset_0_1px_2px_rgba(10,41,88,0.04)] transition-all duration-200 focus:outline-none focus:ring-3 ${
                           isRTL ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4 text-left'
                         }`}
                       />
@@ -684,19 +819,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                   <div>
                     <label
                       htmlFor="login-password"
-                      className="flex items-center justify-between text-xs sm:text-sm font-bold text-[#1e3f73] mb-1.5 px-1 cursor-pointer"
+                      className="flex items-center justify-between text-xs sm:text-[13px] font-bold text-[#163d77] mb-1.5 px-1 cursor-pointer"
                     >
                       {isRTL ? (
                         <>
                           <span className="font-arabic">{ar.passwordLabel}</span>
-                          <span dir="ltr" className="font-english text-xs text-[#4b658c]">
+                          <span dir="ltr" className="font-english text-xs text-[#4b6790]">
                             {en.passwordLabel}
                           </span>
                         </>
                       ) : (
                         <>
                           <span className="font-english">{en.passwordLabel}</span>
-                          <span dir="rtl" className="font-arabic text-xs text-[#4b658c]">
+                          <span dir="rtl" className="font-arabic text-xs text-[#4b6790]">
                             {ar.passwordLabel}
                           </span>
                         </>
@@ -706,11 +841,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     <div className="relative flex items-center">
                       <span
                         aria-hidden="true"
-                        className={`pointer-events-none absolute inset-y-0 flex items-center text-[#0b3978] ${
+                        className={`pointer-events-none absolute inset-y-0 flex items-center text-[#0c3c82] ${
                           isRTL ? 'right-0 pr-4' : 'left-0 pl-4'
                         }`}
                       >
-                        <Lock className="w-5 h-5" strokeWidth={2} />
+                        <InputLockKeyholeIcon className="w-5 h-5" />
                       </span>
 
                       <input
@@ -719,13 +854,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                         type={showPassword ? 'text' : 'password'}
                         required
                         autoComplete="current-password"
+                        aria-invalid={isPasswordInvalid}
+                        aria-describedby={errorMessage ? 'login-error-message' : undefined}
                         value={password}
                         onChange={(e) => {
                           setPassword(e.target.value);
-                          if (errorMessage) setErrorMessage(null);
+                          if (errorMessage) {
+                            setErrorMessage(null);
+                            setInvalidField(null);
+                          }
                         }}
-                        placeholder={`${ar.passwordPlaceholder} | ${en.passwordPlaceholder}`}
-                        className={`w-full min-h-[52px] py-3 rounded-xl bg-[var(--login-input-bg)] border border-[var(--login-input-border)] text-[#0a2958] placeholder-[#5b7396] text-sm sm:text-base font-medium shadow-inner transition-all duration-200 focus:outline-none focus:border-[var(--login-input-border-focus)] focus:ring-3 focus:ring-[#004799]/15 ${
+                        placeholder={t.passwordPlaceholder}
+                        className={`w-full min-h-[54px] py-3 rounded-xl bg-white border ${
+                          isPasswordInvalid
+                            ? 'border-red-400 focus:border-red-600 focus:ring-red-500/15'
+                            : 'border-[#c9d9ee] focus:border-[#004799] focus:ring-[#004799]/15'
+                        } text-[#0a2958] placeholder-[#567096] text-sm sm:text-base font-medium shadow-[inset_0_1px_2px_rgba(10,41,88,0.04)] transition-all duration-200 focus:outline-none focus:ring-3 ${
                           isRTL ? 'pr-12 pl-12 text-right' : 'pl-12 pr-12 text-left'
                         }`}
                       />
@@ -735,7 +879,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                         onClick={() => setShowPassword((prev) => !prev)}
                         aria-label={showPassword ? t.hidePasswordAria : t.showPasswordAria}
                         aria-pressed={showPassword}
-                        className={`absolute inset-y-0 flex items-center px-3.5 text-[#0b3978] hover:text-[#0055cc] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004799] rounded-lg ${
+                        className={`absolute inset-y-0 flex items-center px-3.5 text-[#0c3c82] hover:text-[#0055cc] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004799] rounded-lg ${
                           isRTL ? 'left-0' : 'right-0'
                         }`}
                       >
@@ -757,7 +901,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     <button
                       type="button"
                       onClick={() => setIsForgotOpen(true)}
-                      className="text-xs sm:text-sm font-semibold text-[#0050b3] hover:text-[#002f6c] hover:underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004799] rounded px-1 py-0.5"
+                      className="text-xs sm:text-[13.5px] font-semibold text-[#0052b5] hover:text-[#002f6c] hover:underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004799] rounded px-1 py-0.5"
                     >
                       {isRTL ? (
                         <span>
@@ -784,7 +928,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full min-h-[54px] py-3.5 px-6 rounded-xl bg-gradient-to-b from-[#0052a8] via-[#003e82] to-[#002b5e] hover:from-[#005ec0] hover:via-[#004794] hover:to-[#00336e] active:scale-[0.99] text-white font-bold text-base sm:text-lg shadow-[0_10px_24px_rgba(0,48,107,0.38)] hover:shadow-[0_14px_28px_rgba(0,48,107,0.48)] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:opacity-65 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#004799]/50"
+                      className="w-full min-h-[56px] py-3.5 px-6 rounded-xl bg-gradient-to-b from-[#0057b8] via-[#003f8a] to-[#00295c] hover:from-[#0062cf] hover:via-[#00499e] hover:to-[#00316e] active:scale-[0.99] text-white font-bold text-base sm:text-lg shadow-[0_10px_24px_rgba(0,45,104,0.42),inset_0_1px_0_rgba(255,255,255,0.22)] hover:shadow-[0_14px_28px_rgba(0,45,104,0.52)] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:opacity-65 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#004799]/50"
                     >
                       {isSubmitting ? (
                         <>
@@ -826,7 +970,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                     aria-hidden="true"
                     className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#d4a953] to-[#d4a953]"
                   />
-                  <span className="text-xs sm:text-sm font-bold text-[#0b3978] font-arabic whitespace-nowrap">
+                  <span className="text-xs sm:text-[13.5px] font-bold text-[#0c3c82] font-arabic whitespace-nowrap">
                     {ar.footerTitle}
                   </span>
                   <span
@@ -836,7 +980,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 </div>
                 <p
                   dir="ltr"
-                  className="text-[11px] sm:text-xs font-semibold text-[#1e4b8f] font-english mt-1"
+                  className="text-[11px] sm:text-xs font-semibold text-[#154b96] font-english mt-1"
                 >
                   {en.footerTitle}
                 </p>
@@ -846,10 +990,60 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         </div>
       </main>
 
-      {/* Subtle Bottom Page Margin Spacer */}
-      <div className="h-4 sm:h-6 relative z-10" aria-hidden="true" />
+      {/* =====================================================================
+          3. BOTTOM SWEEPING ROYAL BLUE & METALLIC GOLD WAVES (Matching Reference)
+         ===================================================================== */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-36 sm:h-48 overflow-hidden z-10"
+      >
+        <svg
+          viewBox="0 0 1600 240"
+          preserveAspectRatio="none"
+          className="w-full h-full"
+        >
+          <defs>
+            <linearGradient id="bottomGoldRibbon" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#b88930" />
+              <stop offset="28%" stopColor="#f7dfa3" />
+              <stop offset="62%" stopColor="#d9ae57" />
+              <stop offset="100%" stopColor="#a87924" />
+            </linearGradient>
+            <linearGradient id="bottomBlueWave" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#07275f" />
+              <stop offset="50%" stopColor="#0e49a3" />
+              <stop offset="100%" stopColor="#03122c" />
+            </linearGradient>
+          </defs>
 
-      {/* Accessible Password Recovery Modal */}
+          {/* Deep Navy Base Wave */}
+          <path
+            d="M0,115 C310,235 760,210 1220,115 C1390,80 1510,38 1600,5 L1600,240 L0,240 Z"
+            fill="url(#bottomBlueWave)"
+          />
+          {/* Left Sweeping Metallic Gold Ribbon */}
+          <path
+            d="M0,98 C115,172 260,212 445,226 C255,222 115,190 0,134 Z"
+            fill="url(#bottomGoldRibbon)"
+          />
+          {/* Long Center-to-Right Metallic Gold Wave Line */}
+          <path
+            d="M250,234 C690,218 1150,135 1600,0 L1600,18 C1150,150 695,228 250,234 Z"
+            fill="url(#bottomGoldRibbon)"
+            opacity="0.92"
+          />
+          {/* Foreground Dark Royal Curve */}
+          <path
+            d="M0,185 C470,255 1010,198 1600,65 L1600,240 L0,240 Z"
+            fill="#031129"
+            opacity="0.88"
+          />
+        </svg>
+      </div>
+
+      {/* =====================================================================
+          4. TRANSPARENT PASSWORD RECOVERY NOTICE MODAL (Per Section 5)
+         ===================================================================== */}
       {isForgotOpen && (
         <div
           role="dialog"
@@ -864,10 +1058,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           >
             <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-200">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0">
                   <KeyRound className="w-5 h-5 text-[#004799]" />
                 </div>
-                <h3 id="forgot-modal-title" className="text-base sm:text-lg font-extrabold text-[#0a2958]">
+                <h3
+                  id="forgot-modal-title"
+                  className="text-sm sm:text-base font-extrabold text-[#0a2958]"
+                >
                   {t.recoveryModal.title}
                 </h3>
               </div>
@@ -881,81 +1078,35 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               </button>
             </div>
 
-            {recoverySubmitted ? (
-              <div className="space-y-4 py-1">
-                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-[#0a2958] flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#004799] shrink-0 mt-0.5" />
-                  <div className="text-xs sm:text-sm space-y-1.5 leading-relaxed">
-                    <p className="font-bold text-[#0a2958]">
-                      {t.recoveryModal.successTitle}
-                    </p>
-                    <p className="text-slate-600">
-                      {t.recoveryModal.successNotice}
-                    </p>
-                  </div>
+            <div className="space-y-4">
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                {t.recoveryModal.description}
+              </p>
+
+              <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 flex items-start gap-2.5">
+                <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm space-y-1 leading-relaxed">
+                  <p className="font-bold text-amber-900">
+                    {t.recoveryModal.badgeText}
+                  </p>
+                  <p>{t.recoveryModal.independentNote}</p>
                 </div>
+              </div>
+
+              <p className="text-xs sm:text-sm font-medium text-[#0c3c82] bg-blue-50/70 border border-blue-100 rounded-xl p-3 leading-relaxed">
+                {t.recoveryModal.supportContactLabel}
+              </p>
+
+              <div className="pt-1">
                 <button
                   type="button"
                   onClick={closeForgotModal}
-                  className="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-[#004799] hover:bg-[#003575] text-white font-bold text-sm transition-colors cursor-pointer"
+                  className="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-[#004799] hover:bg-[#003575] text-white font-bold text-xs sm:text-sm transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004799]"
                 >
                   {t.recoveryModal.backToLoginButton}
                 </button>
               </div>
-            ) : (
-              <form onSubmit={handleRecoverySubmit} noValidate className="space-y-4">
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {t.recoveryModal.description}
-                </p>
-
-                {recoveryError && (
-                  <div
-                    role="alert"
-                    className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2"
-                  >
-                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                    <span className="font-medium">{recoveryError}</span>
-                  </div>
-                )}
-
-                <div>
-                  <label
-                    htmlFor="recovery-account"
-                    className="block text-xs sm:text-sm font-bold text-[#0a2958] mb-1.5"
-                  >
-                    {t.recoveryModal.inputLabel}
-                  </label>
-                  <input
-                    id="recovery-account"
-                    type="text"
-                    dir="ltr"
-                    value={recoveryInput}
-                    onChange={(e) => {
-                      setRecoveryInput(e.target.value);
-                      if (recoveryError) setRecoveryError(null);
-                    }}
-                    placeholder={t.recoveryModal.inputPlaceholder}
-                    className="w-full min-h-[46px] px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-[#0a2958] placeholder-slate-400 text-sm focus:outline-none focus:bg-white focus:border-[#004799] focus:ring-2 focus:ring-[#004799]/20"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2.5 pt-2">
-                  <button
-                    type="button"
-                    onClick={closeForgotModal}
-                    className="min-h-[44px] px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
-                  >
-                    {t.recoveryModal.cancelButton}
-                  </button>
-                  <button
-                    type="submit"
-                    className="min-h-[44px] px-5 py-2 rounded-xl bg-[#004799] hover:bg-[#003575] text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer"
-                  >
-                    {t.recoveryModal.submitButton}
-                  </button>
-                </div>
-              </form>
-            )}
+            </div>
           </div>
         </div>
       )}
