@@ -1,20 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# نظام تسجيل الزوار والموردين | Visitors & Suppliers Registration System
 
-# Run and deploy your AI Studio app
+**شركة ساهر للخدمات الذكية — SAHER For Smart Services**  
+*إدارة الخدمات العامة / قسم إدارة المرافق*
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/b344496e-941b-42a6-8c83-b0c781d1f80a
+## تشغيل النظام محلياً (Run Locally)
 
-## Run Locally
+**المتطلبات:** Node.js (الإصدار 18 أو أحدث)
 
-**Prerequisites:**  Node.js
+1. تثبيت الحزم البرمجية:
+   ```bash
+   npm install
+   ```
+2. تشغيل خادم التطوير:
+   ```bash
+   npm run dev
+   ```
+3. بناء نسخة الإنتاج (`dist`):
+   ```bash
+   npm run build
+   ```
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## النشر على GitHub Pages (منع ظهور الصفحة البيضاء أو ملف README)
+
+تم إعداد المشروع بمسارات نسبية (`base: './'`) وملف نشر تلقائي عبر **GitHub Actions** (`.github/workflows/deploy.yml`):
+
+1. ارفع ملفات المشروع إلى مستودعك على GitHub (فرع `main` أو `master`).
+2. من صفحة المستودع على GitHub، انتقل إلى **Settings** ثم **Pages** من القائمة الجانبية.
+3. تحت قسم **Build and deployment** -> **Source**، اختر **GitHub Actions** بدلاً من `Deploy from a branch`.
+4. سيقوم GitHub تلقائياً بتشغيل `npm run build` ونشر مجلد `dist` ليعمل النظام مباشرةً على رابط GitHub Pages دون أي صفحة بيضاء.
