@@ -8,19 +8,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -30,23 +28,99 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Build project
         env:
           NODE_ENV: production
         run: npm run build
 
+      - name: Prepare and verify static Pages bundle
+        run: |
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+          if grep -q "index\.tsx" dist/index.html; then
+            echo "Error: dist/index.html still references raw index.tsx!"
+            exit 1
+          fi
+          test -f dist/index.html
+          test -f dist/assets/reception-scene.png
+
+      - name: Sync compiled bundle to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+      - name: Wait for any concurrent default-branch Pages build to finish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          node -e '
+            const repo = process.env.REPO;
+            const currentRunId = Number(process.env.CURRENT_RUN_ID);
+            const token = process.env.GH_TOKEN;
+            const headers = {
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "github-actions-pages-coordinator"
+            };
+            if (token) headers["Authorization"] = `Bearer ${token}`;
+            const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+            (async () => {
+              await sleep(6000);
+              for (let attempt = 1; attempt <= 30; attempt++) {
+                try {
+                  const res = await fetch(`https://api.github.com/repos/${repo}/actions/runs?per_page=15`, { headers });
+                  if (!res.ok) break;
+                  const data = await res.json();
+                  const runs = Array.isArray(data.workflow_runs) ? data.workflow_runs : [];
+                  const competingRuns = runs.filter((r) =>
+                    r.id !== currentRunId &&
+                    r.status !== "completed" &&
+                    (r.name === "pages build and deployment" || (r.path && r.path.includes("pages-build-deployment")))
+                  );
+                  if (competingRuns.length === 0) {
+                    console.log("No competing pages-build-deployment runs active.");
+                    break;
+                  }
+                  console.log(
+                    `Attempt ${attempt}/30: Waiting for competing Pages run(s):`,
+                    competingRuns.map((r) => `${r.id} (${r.status})`).join(", ")
+                  );
+                } catch (err) {
+                  console.log("Warning checking workflow runs:", err.message);
+                  break;
+                }
+                await sleep(5000);
+              }
+              await sleep(5000);
+            })();
+          '
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        continue-on-error: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

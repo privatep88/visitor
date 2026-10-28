@@ -577,7 +577,11 @@ export default function App() {
 
           const updatedRecords = [...importedRecords, ...records];
           setRecords(updatedRecords);
-          localStorage.setItem('visitor_records', JSON.stringify(updatedRecords));
+          try {
+            localStorage.setItem('visitor_records', JSON.stringify(updatedRecords));
+          } catch {
+            // Ignore storage quota or access errors
+          }
           setImportStatus({
               status: 'success',
               targetType,
