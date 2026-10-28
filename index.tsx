@@ -3,11 +3,53 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// Global startup diagnostics to distinguish asset/script load errors from runtime exceptions
+const isResizeObserverLoopError = (messageOrError: unknown): boolean => {
+  const text =
+    typeof messageOrError === 'string'
+      ? messageOrError
+      : messageOrError instanceof Error
+      ? messageOrError.message
+      : '';
+  return (
+    text.includes('ResizeObserver loop completed with undelivered notifications') ||
+    text.includes('ResizeObserver loop limit exceeded')
+  );
+};
+
+// Stabilize ResizeObserver callbacks using requestAnimationFrame to prevent synchronous layout loops,
+// and filter out benign browser ResizeObserver loop notifications from global error handlers.
 if (typeof window !== 'undefined') {
+  if (typeof window.ResizeObserver !== 'undefined') {
+    const NativeResizeObserver = window.ResizeObserver;
+    window.ResizeObserver = class PatchedResizeObserver extends NativeResizeObserver {
+      constructor(callback: ResizeObserverCallback) {
+        let frameId: number | null = null;
+        super((entries, observer) => {
+          if (frameId !== null) {
+            window.cancelAnimationFrame(frameId);
+          }
+          frameId = window.requestAnimationFrame(() => {
+            frameId = null;
+            callback(entries, observer);
+          });
+        });
+      }
+    };
+  }
+
   window.addEventListener(
     'error',
     (event: ErrorEvent | Event) => {
+      const errorEvent = event as ErrorEvent;
+      if (
+        isResizeObserverLoopError(errorEvent.message) ||
+        isResizeObserverLoopError(errorEvent.error)
+      ) {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        return;
+      }
+
       const target = (event as Event).target as HTMLElement | null;
       if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
         const url =
@@ -19,14 +61,18 @@ if (typeof window !== 'undefined') {
         );
         return;
       }
-      if ('error' in event && event.error) {
-        console.error('[Startup Unhandled Runtime Error]', event.error);
+      if ('error' in event && errorEvent.error) {
+        console.error('[Startup Unhandled Runtime Error]', errorEvent.error);
       }
     },
     true
   );
 
   window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
+    if (isResizeObserverLoopError(event.reason)) {
+      event.preventDefault();
+      return;
+    }
     console.error('[Startup Unhandled Promise Rejection]', event.reason);
   });
 }

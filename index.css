@@ -124,20 +124,20 @@ button, a, input, select, textarea {
   animation: fadeIn 0.35s ease-out forwards;
 }
 
-/* News Ticker Animation - pause on touch/hover */
+/* News Ticker Animation - Left to Right continuous broadcast marquee */
 @keyframes ticker {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-150%); }
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0%, 0, 0); }
 }
 
 .animate-ticker {
-  animation: ticker 90s linear infinite;
+  animation: ticker 28s linear infinite;
   will-change: transform;
 }
 
 @media (max-width: 640px) {
   .animate-ticker {
-    animation-duration: 65s;
+    animation-duration: 22s;
   }
 }
 
@@ -198,9 +198,9 @@ button, a, input, select, textarea {
   font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-/* Respect user reduced motion preferences (WCAG 2.1 AA) */
+/* Respect user reduced motion preferences while keeping explicit news ticker functional */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *:not(.animate-ticker), ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

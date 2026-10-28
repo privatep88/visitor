@@ -715,53 +715,56 @@ export default function App() {
                 </div>
 
                 {/* Scrolling Area */}
-                <div className="flex-1 h-full relative flex items-center overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+                <div className="flex-1 min-w-0 h-full relative flex items-center overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" dir="ltr">
                      <div className="absolute inset-0 bg-[#091526]/80"></div>
-                     {/* The Ticker Track */}
-                     <div className="absolute flex items-center gap-12 whitespace-nowrap animate-ticker w-max right-0 z-10 px-4"> 
-                         {/* Duplicating content 3 times to ensure it covers screens and loops decently for visual effect */}
-                         {[1, 2, 3].map((_, i) => (
-                             <React.Fragment key={i}>
-                                <div className="flex items-center gap-2">
-                                    <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><User className="w-3 h-3" /></div>
-                                    <span className="text-slate-400 text-xs font-medium">آخر زائر:</span>
-                                    <span className="text-white font-bold text-sm" dir="ltr">{quickStats.last}</span>
-                                </div>
+                     {/* The Ticker Track - Seamless Left-to-Right Marquee */}
+                     <div className="absolute inset-y-0 left-0 flex items-center whitespace-nowrap animate-ticker w-max z-10">
+                         {[0, 1].map((halfIndex) => (
+                             <div key={halfIndex} className="flex items-center gap-10 pr-10 flex-shrink-0">
+                                 {[0, 1].map((repeatIndex) => (
+                                     <React.Fragment key={`${halfIndex}-${repeatIndex}`}>
+                                        <div className="flex items-center gap-2" dir="rtl">
+                                            <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><User className="w-3 h-3" /></div>
+                                            <span className="text-slate-400 text-xs font-medium">آخر زائر:</span>
+                                            <span className="text-white font-bold text-sm" dir="ltr">{quickStats.last}</span>
+                                        </div>
 
-                                <span className="text-[#eab308]/30">|</span>
+                                        <span className="text-[#eab308]/40 font-bold">•</span>
 
-                                <div className="flex items-center gap-2">
-                                    <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Activity className="w-3 h-3" /></div>
-                                    <span className="text-slate-400 text-xs font-medium">زوار اليوم:</span>
-                                    <span className="text-white font-bold text-sm">{quickStats.today} <span className="text-[10px] font-normal text-slate-500">سجل</span></span>
-                                </div>
+                                        <div className="flex items-center gap-2" dir="rtl">
+                                            <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Activity className="w-3 h-3" /></div>
+                                            <span className="text-slate-400 text-xs font-medium">زوار اليوم:</span>
+                                            <span className="text-white font-bold text-sm">{quickStats.today} <span className="text-[10px] font-normal text-slate-400">سجل</span></span>
+                                        </div>
 
-                                <span className="text-[#eab308]/30">|</span>
+                                        <span className="text-[#eab308]/40 font-bold">•</span>
 
-                                <div className="flex items-center gap-2">
-                                    <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Truck className="w-3 h-3" /></div>
-                                    <span className="text-slate-400 text-xs font-medium">موردين اليوم:</span>
-                                    <span className="text-white font-bold text-sm">{quickStats.suppliersToday}</span>
-                                </div>
+                                        <div className="flex items-center gap-2" dir="rtl">
+                                            <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Truck className="w-3 h-3" /></div>
+                                            <span className="text-slate-400 text-xs font-medium">موردين اليوم:</span>
+                                            <span className="text-white font-bold text-sm">{quickStats.suppliersToday}</span>
+                                        </div>
 
-                                <span className="text-[#eab308]/30">|</span>
+                                        <span className="text-[#eab308]/40 font-bold">•</span>
 
-                                <div className="flex items-center gap-2">
-                                    <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><UserCog className="w-3 h-3" /></div>
-                                    <span className="text-slate-400 text-xs font-medium">موظفين اليوم:</span>
-                                    <span className="text-white font-bold text-sm">{quickStats.employeesToday}</span>
-                                </div>
+                                        <div className="flex items-center gap-2" dir="rtl">
+                                            <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><UserCog className="w-3 h-3" /></div>
+                                            <span className="text-slate-400 text-xs font-medium">موظفين اليوم:</span>
+                                            <span className="text-white font-bold text-sm">{quickStats.employeesToday}</span>
+                                        </div>
 
-                                <span className="text-[#eab308]/30">|</span>
+                                        <span className="text-[#eab308]/40 font-bold">•</span>
 
-                                <div className="flex items-center gap-2">
-                                    <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Trophy className="w-3 h-3" /></div>
-                                    <span className="text-slate-400 text-xs font-medium">المقر الأنشط:</span>
-                                    <span className="text-white font-bold text-sm">{quickStats.topLoc}</span>
-                                </div>
+                                        <div className="flex items-center gap-2" dir="rtl">
+                                            <div className="p-1 rounded bg-white/10 text-[#eab308] border border-white/5"><Trophy className="w-3 h-3" /></div>
+                                            <span className="text-slate-400 text-xs font-medium">المقر الأنشط:</span>
+                                            <span className="text-white font-bold text-sm">{quickStats.topLoc}</span>
+                                        </div>
 
-                                <span className="text-[#eab308]/30">|</span>
-                             </React.Fragment>
+                                        <span className="text-[#eab308]/40 font-bold">•</span>
+                                     </React.Fragment>
+                                 ))}
+                             </div>
                          ))}
                      </div>
                 </div>

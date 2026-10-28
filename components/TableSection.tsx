@@ -41,21 +41,30 @@ const TableSection: React.FC<TableSectionProps> = ({
     const sectionFileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+      let frameId: number | null = null;
       const handleResize = () => {
-        if (window.innerWidth < 768) {
-          setViewMode('cards');
-        } else {
-          setViewMode('table');
+        if (frameId !== null) {
+          window.cancelAnimationFrame(frameId);
         }
+        frameId = window.requestAnimationFrame(() => {
+          frameId = null;
+          const nextMode = window.innerWidth < 768 ? 'cards' : 'table';
+          setViewMode((prev) => (prev === nextMode ? prev : nextMode));
+        });
       };
-      
+
       // Set initial state based on window width
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
         setViewMode('cards');
       }
 
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => {
+        if (frameId !== null) {
+          window.cancelAnimationFrame(frameId);
+        }
+        window.removeEventListener('resize', handleResize);
+      };
     }, []);
 
     const handleSectionFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
