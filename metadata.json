@@ -1,0 +1,5 @@
+{
+  "name": "Visitor and Supplier Log System",
+  "description": "A comprehensive system for registering, viewing, and managing visitor, supplier, and employee logs for Saher Smart Services. Features offline support, advanced filtering, and Excel export capabilities.",
+  "requestFramePermissions": []
+}
