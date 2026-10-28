@@ -95,8 +95,29 @@ export default function App() {
       return '';
     }
   });
-  const [loading, setLoading] = useState<boolean>(true);
-  const [records, setRecords] = useState<Record[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [records, setRecords] = useState<Record[]>(() => {
+    try {
+      const localData = localStorage.getItem('visitor_records');
+      const notesClearedFlag = localStorage.getItem('saher_notes_cleared_v1');
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          let parsedRecords: Record[] = parsed;
+          if (!notesClearedFlag) {
+            parsedRecords = parsedRecords.map(rec => ({ ...rec, notes: '' }));
+            localStorage.setItem('visitor_records', JSON.stringify(parsedRecords));
+            localStorage.setItem('saher_notes_cleared_v1', 'true');
+          }
+          return parsedRecords;
+        }
+      }
+      localStorage.setItem('saher_notes_cleared_v1', 'true');
+      return demoRecords;
+    } catch {
+      return demoRecords;
+    }
+  });
   const [activeTab, setActiveTab] = useState<'form' | 'list' | 'dashboard'>('form'); 
   const [xlsxLoaded, setXlsxLoaded] = useState<boolean>(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null); 
@@ -181,32 +202,15 @@ export default function App() {
       .then(() => setXlsxLoaded(true))
       .catch(e => console.error("Failed to load XLSX script", e));
       
-    const bannerDismissed = sessionStorage.getItem('welcomeBannerDismissed');
-    if (!bannerDismissed) {
-      setShowWelcomeBanner(true);
-    }
-
     try {
-        const localData = localStorage.getItem('visitor_records');
-        const notesClearedFlag = localStorage.getItem('saher_notes_cleared_v1');
-        if (localData && JSON.parse(localData).length > 0) {
-            let parsedRecords: Record[] = JSON.parse(localData);
-            if (!notesClearedFlag) {
-                parsedRecords = parsedRecords.map(rec => ({ ...rec, notes: '' }));
-                localStorage.setItem('visitor_records', JSON.stringify(parsedRecords));
-                localStorage.setItem('saher_notes_cleared_v1', 'true');
-            }
-            setRecords(parsedRecords);
-        } else {
-            localStorage.setItem('saher_notes_cleared_v1', 'true');
-            setRecords(demoRecords);
-        }
-    } catch (e) {
-        console.error("Failed to parse local data, falling back to demo records:", e);
-        setRecords(demoRecords);
-        localStorage.clear();
+      const bannerDismissed = sessionStorage.getItem('welcomeBannerDismissed');
+      if (!bannerDismissed) {
+        setShowWelcomeBanner(true);
+      }
+    } catch {
+      setShowWelcomeBanner(true);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   }, []);
 
@@ -220,7 +224,11 @@ export default function App() {
 
   const handleDismissBanner = () => {
     setShowWelcomeBanner(false);
-    sessionStorage.setItem('welcomeBannerDismissed', 'true');
+    try {
+      sessionStorage.setItem('welcomeBannerDismissed', 'true');
+    } catch {
+      // Ignore storage access errors
+    }
   };
 
   const filteredRecords = useMemo(() => {
@@ -340,7 +348,11 @@ export default function App() {
       : [finalRecord, ...records];
       
     setRecords(newRecords);
-    localStorage.setItem('visitor_records', JSON.stringify(newRecords));
+    try {
+      localStorage.setItem('visitor_records', JSON.stringify(newRecords));
+    } catch {
+      // Ignore storage quota or access errors
+    }
     setSubmitStatus(editingId ? 'updated' : 'success_offline');
 
     setFormData(initialFormState);
@@ -354,7 +366,11 @@ export default function App() {
     if (!recordToDelete) return;
     const newRecords = records.filter(record => record.id !== recordToDelete);
     setRecords(newRecords);
-    localStorage.setItem('visitor_records', JSON.stringify(newRecords));
+    try {
+      localStorage.setItem('visitor_records', JSON.stringify(newRecords));
+    } catch {
+      // Ignore storage quota or access errors
+    }
     setRecordToDelete(null);
   };
   

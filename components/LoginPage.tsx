@@ -476,7 +476,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               <div className="relative w-full h-52 sm:h-72 md:h-80 lg:h-[360px] xl:h-[390px]">
                 {!imageError ? (
                   <img
-                    src={`${import.meta.env.BASE_URL}assets/reception-scene.png`}
+                    src={`${
+                      typeof import.meta !== 'undefined' &&
+                      import.meta.env &&
+                      typeof import.meta.env.BASE_URL === 'string'
+                        ? import.meta.env.BASE_URL.endsWith('/')
+                          ? import.meta.env.BASE_URL
+                          : `${import.meta.env.BASE_URL}/`
+                        : './'
+                    }assets/reception-scene.png`}
                     alt={t.heroImageAlt}
                     width={905}
                     height={502}
