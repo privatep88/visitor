@@ -1871,68 +1871,75 @@ export default function App() {
       {/* =====================================================================
           7. EXACT CORPORATE FOOTER (التذييل المؤسسي لشركة ساعد)
          ===================================================================== */}
-      <footer className="relative bg-gradient-to-b from-[#07162C] to-[#051022] text-slate-200 pt-6 pb-[calc(1rem+env(safe-area-inset-bottom))] mt-auto border-t-2 border-[#F4BF19] overflow-hidden print:hidden">
-        {/* Top-Right Golden Corner Ribbon Accent (Matching Reference Image) */}
+      {/* =====================================================================
+          7. EXACT CORPORATE FOOTER (التذييل المؤسسي لشركة ساعد)
+             Reference: SAAED_Visitor_Management_Dashboard_55bf3eb7.png (1448 x 149)
+         ===================================================================== */}
+      <footer className="relative bg-gradient-to-b from-[#07162C] to-[#051022] text-slate-200 pt-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] mt-auto border-t-2 border-[#F4BF19] overflow-hidden print:hidden select-text">
+        {/* Top-Right Golden Corner Ribbon Accent (Exact Metallic Gold Arch) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 right-0 w-44 h-24 overflow-hidden z-10"
-        >
-          <svg viewBox="0 0 200 110" preserveAspectRatio="none" className="w-full h-full">
-            <defs>
-              <linearGradient id="footerRightGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFE07D" />
-                <stop offset="55%" stopColor="#F4BF19" />
-                <stop offset="100%" stopColor="#A67408" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M60,0 L200,0 L200,85 C155,55 110,22 60,0 Z"
-              fill="url(#footerRightGold)"
-            />
-          </svg>
-        </div>
-
-        {/* Bottom-Left Abu Dhabi Skyline Towers (Seamless Reference Integration) */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none hidden lg:block absolute left-0 bottom-0 top-0 w-[300px] z-0 overflow-hidden [mask-image:linear-gradient(to_right,black_75%,transparent_100%)]"
+          className="pointer-events-none absolute top-0 right-0 w-40 sm:w-52 md:w-60 h-auto z-10 select-none"
         >
           <img
-            src={`${baseUrl}assets/saaed/footer-skyline.png`}
+            src={`${baseUrl}assets/saaed/footer-corner-ribbon.png`}
             alt=""
-            width={290}
-            height={146}
-            className="w-full h-full object-contain object-left-bottom select-none"
+            width={248}
+            height={80}
+            className="w-full h-auto object-contain object-top-right"
           />
         </div>
 
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 relative z-20">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start text-right lg:pl-60">
-            {/* RIGHT COLUMN (md:col-span-5): Original SAAED Logo + Company Description (Location #4) */}
-            <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-right md:pl-6 md:border-l md:border-white/20">
+        {/* Bottom-Left Abu Dhabi Skyline Towers & Water Reflection (Seamless Integration) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none hidden lg:block absolute left-0 bottom-0 top-0 w-[285px] z-0 overflow-hidden"
+        >
+          <img
+            src={`${baseUrl}assets/saaed/footer-skyline.png`}
+            alt="أبراج أبوظبي المعمارية"
+            width={285}
+            height={149}
+            className="w-full h-full object-fill object-left-bottom select-none"
+          />
+        </div>
+
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 relative z-20">
+          {/* Main 3 Columns Row (Matching 33% | 22% | 25% Reference Geometry) */}
+          <div className="flex flex-col md:flex-row items-center justify-between text-center gap-4 md:gap-0 lg:pl-[285px]">
+            {/* RIGHT COLUMN (SAAED Logo + Company Description) */}
+            <div className="flex-1 flex flex-col items-center justify-center px-2 py-0.5 min-w-[260px] max-w-md">
               <img
                 src={logoSrc}
                 onError={handleLogoError}
                 alt="SAAED ساعد"
-                className="h-12 sm:h-14 w-auto object-contain mb-2.5 select-none"
+                className="h-7 sm:h-8 w-auto object-contain mb-1 select-none"
               />
-              <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed max-w-md">
-                شركة ساعد في تقديم الحلول والخدمات الذكية، ملتزمون بالابتكار والجودة لتحقيق أعلى مستويات الكفاءة والخدمات الذكية.
+              <p className="text-[11px] sm:text-[11.5px] text-slate-100 font-medium leading-relaxed text-center">
+                شركة ساعد في تقديم الحلول والخدمات الذكية، ملتزمون
+                <br className="hidden sm:inline" />
+                بالابتكار والجودة لتحقيق أعلى مستويات الكفاءة والخدمات الذكية.
               </p>
             </div>
 
-            {/* CENTER COLUMN (md:col-span-3): روابط سريعة */}
-            <div className="md:col-span-3 flex flex-col items-center md:items-start md:px-4 md:border-l md:border-white/20">
-              <div className="mb-2.5">
-                <h3 className="text-sm sm:text-base font-extrabold text-white pb-1">
+            {/* Vertical Divider 1 */}
+            <div
+              aria-hidden="true"
+              className="hidden md:block w-px h-16 bg-white/20 shrink-0 self-center"
+            />
+
+            {/* CENTER COLUMN (روابط سريعة) */}
+            <div className="w-full md:w-[220px] flex flex-col items-center justify-center px-2 py-0.5 shrink-0">
+              <div className="mb-1 text-center">
+                <h3 className="text-xs sm:text-[13px] font-extrabold text-white">
                   روابط سريعة
                 </h3>
                 <span
                   aria-hidden="true"
-                  className="block w-14 h-[2px] bg-[#F4BF19] rounded-full"
+                  className="block w-12 h-[2px] bg-[#F4BF19] rounded-full mx-auto mt-0.5"
                 />
               </div>
-              <ul className="space-y-1.5 text-xs sm:text-[13px] text-slate-200">
+              <ul className="space-y-0.5 text-[11px] sm:text-[11.5px] text-slate-200">
                 <li>
                   <a
                     href="#form"
@@ -1941,10 +1948,10 @@ export default function App() {
                       setActiveTab('form');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="hover:text-[#FFD45B] transition-colors flex items-center gap-2 py-0.5"
+                    className="hover:text-[#FFD45B] transition-colors flex items-center justify-center gap-2 py-0.5"
                   >
-                    <Home className="w-4 h-4 text-white shrink-0" />
                     <span>الرئيسية</span>
+                    <Home className="w-3.5 h-3.5 text-white shrink-0" />
                   </a>
                 </li>
                 <li>
@@ -1954,70 +1961,76 @@ export default function App() {
                       e.preventDefault();
                       setActiveTab('list');
                     }}
-                    className="hover:text-[#FFD45B] transition-colors flex items-center gap-2 py-0.5"
+                    className="hover:text-[#FFD45B] transition-colors flex items-center justify-center gap-2 py-0.5"
                   >
-                    <LayoutGrid className="w-4 h-4 text-white shrink-0" />
                     <span>خدماتنا</span>
+                    <LayoutGrid className="w-3.5 h-3.5 text-white shrink-0" />
                   </a>
                 </li>
                 <li>
                   <a
                     href="mailto:Logistic@saaed.ae"
-                    className="hover:text-[#FFD45B] transition-colors flex items-center gap-2 py-0.5"
+                    className="hover:text-[#FFD45B] transition-colors flex items-center justify-center gap-2 py-0.5"
                   >
-                    <Send className="w-4 h-4 text-white shrink-0" />
                     <span>تواصل معنا</span>
+                    <Send className="w-3.5 h-3.5 text-white shrink-0" />
                   </a>
                 </li>
               </ul>
             </div>
 
-            {/* LEFT COLUMN (md:col-span-4): تواصل معنا */}
-            <div className="md:col-span-4 flex flex-col items-center md:items-start md:pr-2">
-              <div className="mb-2.5">
-                <h3 className="text-sm sm:text-base font-extrabold text-white pb-1">
+            {/* Vertical Divider 2 */}
+            <div
+              aria-hidden="true"
+              className="hidden md:block w-px h-16 bg-white/20 shrink-0 self-center"
+            />
+
+            {/* LEFT COLUMN (تواصل معنا) */}
+            <div className="flex-1 flex flex-col items-center justify-center px-2 py-0.5 min-w-[260px] max-w-sm">
+              <div className="mb-1 text-center">
+                <h3 className="text-xs sm:text-[13px] font-extrabold text-white">
                   تواصل معنا
                 </h3>
                 <span
                   aria-hidden="true"
-                  className="block w-14 h-[2px] bg-[#F4BF19] rounded-full"
+                  className="block w-12 h-[2px] bg-[#F4BF19] rounded-full mx-auto mt-0.5"
                 />
               </div>
-              <ul className="space-y-2 text-xs sm:text-[13px] text-slate-200">
-                <li className="flex items-center justify-end gap-2.5" dir="ltr">
+              <ul className="space-y-0.5 text-[11px] sm:text-[11.5px] text-slate-200">
+                <li className="flex items-center justify-center gap-2" dir="ltr">
                   <span className="font-english text-slate-100">
                     Level 3, Baynona Building, Khalif City A
                   </span>
-                  <MapPin className="w-4 h-4 text-white shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
-                <li className="flex items-center justify-end gap-2.5" dir="ltr">
+                <li className="flex items-center justify-center gap-2" dir="ltr">
                   <a
                     href="tel:+97141234567"
                     className="hover:text-[#FFD45B] transition-colors font-english text-slate-100"
                   >
                     +971 4 123 4567
                   </a>
-                  <Phone className="w-4 h-4 text-white shrink-0" />
+                  <Phone className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
-                <li className="flex items-center justify-end gap-2.5" dir="ltr">
+                <li className="flex items-center justify-center gap-2" dir="ltr">
                   <a
                     href="mailto:Logistic@saaed.ae"
                     className="hover:text-[#FFD45B] transition-colors font-english text-slate-100"
                   >
                     Logistic@saaed.ae
                   </a>
-                  <Mail className="w-4 h-4 text-white shrink-0" />
+                  <Mail className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Bottom Copyright Bar */}
-          <div className="border-t border-[#F4BF19]/40 mt-4 pt-3 text-center">
-            <p className="text-xs sm:text-[13px] font-bold text-white mb-0.5">
+          {/* Bottom Copyright Bar with Delicate Horizontal Divider */}
+          <div className="border-t border-white/20 mt-2 pt-1.5 text-center">
+            <p className="text-[11px] sm:text-[11.5px] font-bold text-white mb-0.5">
               إعداد وتصميم / خالد الهاشمي
             </p>
-            <p className="text-[11px] sm:text-xs text-slate-300 font-english">
+            <p className="text-[10px] sm:text-[10.5px] text-slate-300 font-english">
               جميع الحقوق محفوظة لـ © 2026 SAAED FOR SMART SERVICES
             </p>
           </div>
