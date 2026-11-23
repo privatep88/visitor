@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 
 import { PREDEFINED_LOCATIONS, YEARS, CURRENT_YEAR, MONTHS } from './constants.ts';
+import { BRAND_CONFIG, getBrandAssetUrl } from './brandConfig.ts';
 import { Record, RecordType, FormDataState, SubmitStatus, SortOrder, ImportStatusState } from './types.ts';
 import TableSection from './components/TableSection.tsx';
 import ConfirmationModal from './components/ConfirmationModal.tsx';
@@ -214,10 +215,12 @@ export default function App() {
   const isInitialMount = useRef(true);
 
   const baseUrl = getBaseUrl();
-  const [logoSrc, setLogoSrc] = useState<string>(`${baseUrl}assets/aistudio/logo_1afd1154.png`);
+  const primaryLogoUrl = getBrandAssetUrl(BRAND_CONFIG.logoPath, baseUrl);
+  const fallbackLogoUrl = getBrandAssetUrl(BRAND_CONFIG.logoFallbackPath, baseUrl);
+  const [logoSrc, setLogoSrc] = useState<string>(primaryLogoUrl);
   const handleLogoError = () => {
-    if (logoSrc !== `${baseUrl}assets/saaed/saaed-logo.png`) {
-      setLogoSrc(`${baseUrl}assets/saaed/saaed-logo.png`);
+    if (logoSrc !== fallbackLogoUrl) {
+      setLogoSrc(fallbackLogoUrl);
     }
   };
 
@@ -700,7 +703,7 @@ export default function App() {
   const supplierRecords = filteredRecords.filter(r => r.type === 'supplier');
   const employeeRecords = filteredRecords.filter(r => r.type === 'employee');
 
-  //SAAED Field & Label Styling matching Reference Image
+  // SAHER Field & Label Styling
   const saaedInputClasses =
     "flex-1 min-w-0 h-8 sm:h-[31px] px-3 text-xs sm:text-[13px] font-semibold border border-[#BACDE7] rounded-lg bg-[#E7F0FC] text-[#102442] placeholder-[#526784] shadow-[inset_0_1px_2px_rgba(16,36,66,0.05)] transition-all duration-200 focus:outline-none focus:bg-white focus:border-[#2563A8] focus:ring-2 focus:ring-[#2563A8]/20";
   const saaedIconBoxClasses =
@@ -743,10 +746,10 @@ export default function App() {
     return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }
 
-  // Format Active Location for KPI Card 1 into primary & secondary lines matching Reference Image
+  // Format Active Location for KPI Card 1 into primary & secondary lines
   const rawActiveLocation = quickStats.topLoc !== 'لا يوجد' ? quickStats.topLoc : PREDEFINED_LOCATIONS[0];
   const locationParts = rawActiveLocation.split('-').map(part => part.trim()).filter(Boolean);
-  const locationTitleLine = locationParts[0] ? locationParts[0].replace('ساهر', 'ساعد') : 'مقر ساعد';
+  const locationTitleLine = locationParts[0] || BRAND_CONFIG.defaultLocationLabelAr;
   const locationSubLine =
     locationParts.length > 1 ? locationParts.slice(1).join(' - ') : 'أبوظبي - عمارات';
 
@@ -756,20 +759,22 @@ export default function App() {
       dir="rtl"
     >
       {/* =====================================================================
-          1. EXACT SAAED TOP HEADER (الترويسة الكحلية العليا)
+          1. SAHER TOP HEADER (الترويسة الكحلية العليا)
          ===================================================================== */}
       <header className="relative bg-gradient-to-l from-[#07162C] via-[#0B2246] to-[#061329] text-white shadow-xl z-40 print:hidden">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 pt-2.5 pb-4">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
-            {/* RIGHT: Official SAAED Logo + Vertical Divider */}
+            {/* RIGHT: Official SAHER Logo + Vertical Divider */}
             <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-start">
               <div className="flex items-center gap-3.5">
-                <img
-                  src={logoSrc}
-                  onError={handleLogoError}
-                  alt="SAAED ساعد"
-                  className="h-11 sm:h-14 w-auto object-contain select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
-                />
+                <div className="inline-flex items-center justify-center rounded-xl bg-white/95 px-2.5 sm:px-3 py-1 sm:py-1.5 border border-[#F4BF19]/45 shadow-[0_4px_16px_rgba(0,0,0,0.38)]">
+                  <img
+                    src={logoSrc}
+                    onError={handleLogoError}
+                    alt={BRAND_CONFIG.logoAlt}
+                    className="h-9 sm:h-11 w-auto object-contain select-none"
+                  />
+                </div>
                 <div
                   aria-hidden="true"
                   className="hidden lg:block w-[1px] h-11 bg-gradient-to-b from-transparent via-white/30 to-transparent"
@@ -865,7 +870,7 @@ export default function App() {
 
       {/* =====================================================================
           2. EXACT HERO SECTION (قسم الترحيب المصور)
-             - Left: Photorealistic UAE Reception Scene (Men only) + Independent SAAED Logo on Wall
+             - Left: Photorealistic UAE Reception Scene (Men only) + Official SAHER Logo on Wall
              - Right: Navy Gradient + Welcome Heading & Description + Golden Badge Icon
          ===================================================================== */}
       <section
@@ -880,22 +885,22 @@ export default function App() {
           <div className="relative w-full lg:w-[58%] h-[180px] sm:h-[196px] shrink-0 overflow-hidden">
             <img
               src={`${baseUrl}assets/saaed/hero-reception-clean.png`}
-              alt="مشهد استقبال مؤسسي في شركة ساعد يظهر موظف الاستقبال يستلم بطاقة الزائر"
+              alt={BRAND_CONFIG.heroReceptionAlt}
               width={812}
               height={176}
               className="w-full h-full object-cover object-left select-none"
             />
 
-            {/* Independent Original SAAED Logo Placed Directly Over the Reception Wall (Location #2) */}
+            {/* Official SAHER Logo Placed Directly Over the Reception Wall */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute top-[14%] left-[69%] w-[23%] max-w-[175px] flex items-center justify-center"
+              className="pointer-events-none absolute top-[12%] left-[70%] w-[21%] max-w-[165px] flex items-center justify-center"
             >
               <img
                 src={logoSrc}
                 onError={handleLogoError}
                 alt=""
-                className="w-full h-auto object-contain select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.18)]"
+                className="w-full h-auto object-contain select-none drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]"
               />
             </div>
 
@@ -990,7 +995,7 @@ export default function App() {
                             المقر النشط :
                           </span>
                           <span className="text-white font-bold text-xs sm:text-sm">
-                            {rawActiveLocation.replace('ساهر', 'ساعد')}
+                            {rawActiveLocation}
                           </span>
                         </div>
 
@@ -1653,8 +1658,8 @@ export default function App() {
                 className="lg:col-span-3 relative w-full max-w-[360px] lg:max-w-none mx-auto aspect-[560/756] lg:aspect-auto rounded-2xl overflow-hidden border border-[#C2D6F0] shadow-md bg-[#081C3A] flex items-center justify-center order-2"
               >
                 <img
-                  src={`${baseUrl}assets/saaed/visitor-id-card.png`}
-                  alt="بطاقة تعريف زائر تحمل شعار ساعد على مكتب الاستقبال"
+                  src={getBrandAssetUrl(BRAND_CONFIG.visitorCardPath, baseUrl)}
+                  alt={BRAND_CONFIG.visitorCardAlt}
                   width={560}
                   height={756}
                   className="w-full h-full object-fill select-none block"
@@ -1869,11 +1874,7 @@ export default function App() {
       </main>
 
       {/* =====================================================================
-          7. EXACT CORPORATE FOOTER (التذييل المؤسسي لشركة ساعد)
-         ===================================================================== */}
-      {/* =====================================================================
-          7. EXACT CORPORATE FOOTER (التذييل المؤسسي لشركة ساعد)
-             Reference: SAAED_Visitor_Management_Dashboard_55bf3eb7.png (1448 x 149)
+          7. CORPORATE FOOTER (التذييل المؤسسي لشركة ساهر)
          ===================================================================== */}
       <footer className="relative bg-gradient-to-b from-[#07162C] to-[#051022] text-slate-200 pt-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] mt-auto border-t-2 border-[#F4BF19] overflow-hidden print:hidden select-text">
         {/* Top-Right Golden Corner Ribbon Accent (Exact Metallic Gold Arch) */}
@@ -1907,18 +1908,20 @@ export default function App() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 relative z-20">
           {/* Main 3 Columns Row (Matching 33% | 22% | 25% Reference Geometry) */}
           <div className="flex flex-col md:flex-row items-center justify-between text-center gap-4 md:gap-0 lg:pl-[285px]">
-            {/* RIGHT COLUMN (SAAED Logo + Company Description) */}
+            {/* RIGHT COLUMN (SAHER Logo + Company Description) */}
             <div className="flex-1 flex flex-col items-center justify-center px-2 py-0.5 min-w-[260px] max-w-md">
-              <img
-                src={logoSrc}
-                onError={handleLogoError}
-                alt="SAAED ساعد"
-                className="h-7 sm:h-8 w-auto object-contain mb-1 select-none"
-              />
+              <div className="inline-flex items-center justify-center rounded-lg bg-white/95 px-2.5 py-1 border border-[#F4BF19]/40 shadow-[0_2px_10px_rgba(0,0,0,0.35)] mb-1.5">
+                <img
+                  src={logoSrc}
+                  onError={handleLogoError}
+                  alt={BRAND_CONFIG.logoAlt}
+                  className="h-7 sm:h-8 w-auto object-contain select-none"
+                />
+              </div>
               <p className="text-[11px] sm:text-[11.5px] text-slate-100 font-medium leading-relaxed text-center">
-                شركة ساعد في تقديم الحلول والخدمات الذكية، ملتزمون
+                {BRAND_CONFIG.footerDescriptionLine1Ar}
                 <br className="hidden sm:inline" />
-                بالابتكار والجودة لتحقيق أعلى مستويات الكفاءة والخدمات الذكية.
+                {BRAND_CONFIG.footerDescriptionLine2Ar}
               </p>
             </div>
 
@@ -1969,7 +1972,7 @@ export default function App() {
                 </li>
                 <li>
                   <a
-                    href="mailto:Logistic@saaed.ae"
+                    href={`mailto:${BRAND_CONFIG.supportEmail}`}
                     className="hover:text-[#FFD45B] transition-colors flex items-center justify-center gap-2 py-0.5"
                   >
                     <span>تواصل معنا</span>
@@ -1999,7 +2002,7 @@ export default function App() {
               <ul className="space-y-0.5 text-[11px] sm:text-[11.5px] text-slate-200">
                 <li className="flex items-center justify-center gap-2" dir="ltr">
                   <span className="font-english text-slate-100">
-                    Level 3, Baynona Building, Khalif City A
+                    {BRAND_CONFIG.addressEn}
                   </span>
                   <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
@@ -2008,16 +2011,16 @@ export default function App() {
                     href="tel:+97141234567"
                     className="hover:text-[#FFD45B] transition-colors font-english text-slate-100"
                   >
-                    +971 4 123 4567
+                    {BRAND_CONFIG.supportPhone}
                   </a>
                   <Phone className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
                 <li className="flex items-center justify-center gap-2" dir="ltr">
                   <a
-                    href="mailto:Logistic@saaed.ae"
+                    href={`mailto:${BRAND_CONFIG.supportEmail}`}
                     className="hover:text-[#FFD45B] transition-colors font-english text-slate-100"
                   >
-                    Logistic@saaed.ae
+                    {BRAND_CONFIG.supportEmail}
                   </a>
                   <Mail className="w-3.5 h-3.5 text-white shrink-0" />
                 </li>
@@ -2031,7 +2034,7 @@ export default function App() {
               إعداد وتصميم / خالد الهاشمي
             </p>
             <p className="text-[10px] sm:text-[10.5px] text-slate-300 font-english">
-              جميع الحقوق محفوظة لـ © 2026 SAAED FOR SMART SERVICES
+              {BRAND_CONFIG.copyrightText}
             </p>
           </div>
         </div>

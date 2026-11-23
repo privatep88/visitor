@@ -17,6 +17,7 @@ import {
   persistLanguage,
   validateCredentials,
 } from './loginTranslations';
+import { BRAND_CONFIG, getBrandAssetUrl } from '../brandConfig.ts';
 
 interface LoginPageProps {
   onLoginSuccess: (username: string) => void;
@@ -700,10 +701,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 relative z-30"
           >
             <div className="w-full max-w-[465px] rounded-[28px] bg-gradient-to-b from-[#f8fbff] via-[#f2f7fd] to-[#ebf3fc] border border-white/95 shadow-[0_28px_70px_rgba(2,10,28,0.65)] px-6 sm:px-10 py-8 sm:py-10 text-[#0a2e65] flex flex-col justify-between">
-              {/* Top Section: Architectural Logo + Sign In Headings */}
+              {/* Top Section: Official SAHER Logo + Sign In Headings */}
               <div>
                 <div className="flex flex-col items-center text-center mb-6 sm:mb-7">
-                  <SystemTowersLogo className="w-20 h-20 sm:w-24 sm:h-22 mb-2.5 drop-shadow-sm" />
+                  <img
+                    src={getBrandAssetUrl(BRAND_CONFIG.logoPath)}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      const fallback = getBrandAssetUrl(BRAND_CONFIG.logoFallbackPath);
+                      if (target.src !== fallback) {
+                        target.src = fallback;
+                      }
+                    }}
+                    alt={BRAND_CONFIG.logoAlt}
+                    className="h-16 sm:h-20 w-auto max-w-[210px] object-contain mb-3 select-none drop-shadow-sm"
+                  />
 
                   {isRTL ? (
                     <>

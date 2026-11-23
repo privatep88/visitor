@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Record } from '../types.ts';
 import { YEARS, CURRENT_YEAR, MONTHS, PREDEFINED_LOCATIONS } from '../constants.ts';
+import { BRAND_CONFIG, getBrandAssetUrl } from '../brandConfig.ts';
 
 interface MonthlyLocationReportSectionProps {
   records: Record[];
@@ -604,12 +605,12 @@ const MonthlyLocationReportSection: React.FC<MonthlyLocationReportSectionProps> 
           </div>
         </div>
 
-        {/* Left: SAHER Brand Lockup & Preparation Timestamp */}
+        {/* Left: Official SAHER Brand Lockup & Preparation Timestamp */}
         <div style={{ textAlign: 'left' }} dir="ltr">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
             <div>
               <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', lineHeight: 1.1 }}>
-                SAHER
+                {BRAND_CONFIG.nameEn}
               </div>
               <div style={{ fontSize: '8px', color: '#eab308', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 For Smart Services
@@ -617,20 +618,26 @@ const MonthlyLocationReportSection: React.FC<MonthlyLocationReportSectionProps> 
             </div>
             <div
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '50%',
-                backgroundColor: '#1e3a8a',
-                border: '2px solid #eab308',
+                backgroundColor: '#ffffff',
+                border: '1.5px solid #eab308',
+                borderRadius: '8px',
+                padding: '3px 8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '16px',
-                color: '#ffffff'
+                height: '36px'
               }}
             >
-              S
+              <img
+                src={getBrandAssetUrl(BRAND_CONFIG.logoPath)}
+                alt={BRAND_CONFIG.logoAlt}
+                style={{
+                  height: '26px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  display: 'block'
+                }}
+              />
             </div>
           </div>
           <div style={{ fontSize: '9.5px', color: '#cbd5e1', marginTop: '5px' }} dir="rtl">
